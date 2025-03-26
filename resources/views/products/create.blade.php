@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('shop.products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -40,26 +40,33 @@
 
                         <div class="mb-3">
                             <label for="price" class="form-label">Precio</label>
-                            <input type="number" 
-                                class="form-control @error('price') is-invalid @enderror" 
-                                id="price" 
-                                name="price" 
-                                step="0.01" 
-                                value="{{ old('price') }}" 
-                                required>
-                            @error('price')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" 
+                                        class="form-control @error('price') is-invalid @enderror" 
+                                        id="price" 
+                                        name="price" 
+                                        value="{{ old('price') }}" 
+                                        step="0.01" 
+                                        min="0" 
+                                        max="99999999.99"
+                                        required>
+                                @error('price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <small class="form-text text-muted">El precio máximo permitido es $99,999,999.99</small>
                         </div>
 
                         <div class="mb-3">
                             <label for="stock" class="form-label">Stock</label>
                             <input type="number" 
-                                class="form-control @error('stock') is-invalid @enderror" 
-                                id="stock" 
-                                name="stock" 
-                                value="{{ old('stock') }}" 
-                                required>
+                                    class="form-control @error('stock') is-invalid @enderror" 
+                                    id="stock" 
+                                    name="stock" 
+                                    value="{{ old('stock') }}" 
+                                    min="0" 
+                                    required>
                             @error('stock')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -87,16 +94,16 @@
                         <div class="mb-3">
                             <label for="image" class="form-label">Imagen</label>
                             <input type="file" 
-                                class="form-control @error('image') is-invalid @enderror" 
-                                id="image" 
-                                name="image">
+                                    class="form-control @error('image') is-invalid @enderror" 
+                                    id="image" 
+                                    name="image">
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{{ route('shop.products.index') }}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Crear Producto</button>
                         </div>
                     </form>

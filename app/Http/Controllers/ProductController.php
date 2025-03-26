@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\LowStockNotification;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -35,29 +36,44 @@ class ProductController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|max:255',
-                'description' => 'required',
-                'price' => 'required|numeric|min:0',
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0|max:99999999.99',
                 'stock' => 'required|integer|min:0',
                 'category_id' => 'required|exists:categories,id',
-                'image' => 'nullable|image|max:2048'
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ], [
+                'price.max' => 'El precio no puede ser mayor a $99,999,999.99'
             ]);
 
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('products', 'public');
-                $validated['image'] = $path;
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                // Asegurar que el directorio exista
+                $storage_path = storage_path('app/public/products');
+                if (!file_exists($storage_path)) {
+                    mkdir($storage_path, 0755, true);
+                }
+                
+                // Guardar el archivo
+                $file->move($storage_path, $filename);
+                $validated['image'] = 'products/' . $filename;
+                
+                Log::info('Imagen guardada en: ' . $storage_path . '/' . $filename);
             }
 
             $product = Product::create($validated);
 
-            if ($product->stock < 5) {
-                Mail::to('admin@example.com')->send(new LowStockNotification($product));
+            if ($product->isLowStock()) {
+                Log::warning("Producto {$product->name} tiene bajo stock: {$product->stock} unidades");
             }
 
-            return redirect()->route('products.index')->with('success', 'Producto creado exitosamente');
+            return redirect()->route('shop.products.index')
+                ->with('success', 'Producto creado exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al crear producto: ' . $e->getMessage());
-            return back()->withInput()->withErrors(['error' => 'Error al crear el producto: ' . $e->getMessage()]);
+            return back()->with('error', 'Error al crear el producto. Por favor, intente nuevamente.');
         }
     }
 
@@ -74,32 +90,71 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:255',
-            'description' => 'required',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048'
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0|max:99999999.99',
+                'stock' => 'required|integer|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ], [
+                'price.max' => 'El precio no puede ser mayor a $99,999,999.99'
+            ]);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $validated['image'] = $path;
+            if ($request->hasFile('image')) {
+                if ($product->image) {
+                    $old_path = storage_path('app/public/' . $product->image);
+                    if (file_exists($old_path)) {
+                        unlink($old_path);
+                    }
+                }
+                
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                // Asegurar que el directorio exista
+                $storage_path = storage_path('app/public/products');
+                if (!file_exists($storage_path)) {
+                    mkdir($storage_path, 0755, true);
+                }
+                
+                // Guardar el archivo
+                $file->move($storage_path, $filename);
+                $validated['image'] = 'products/' . $filename;
+                
+                Log::info('Imagen guardada en: ' . $storage_path . '/' . $filename);
+            }
+
+            $product->update($validated);
+
+            if ($product->isLowStock()) {
+                Log::warning("Producto {$product->name} tiene bajo stock: {$product->stock} unidades");
+            }
+
+            return redirect()->route('shop.products.index')
+                ->with('success', 'Producto actualizado exitosamente.');
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar producto: ' . $e->getMessage());
+            return back()->with('error', 'Error al actualizar el producto. Por favor, intente nuevamente.');
         }
-
-        $product->update($validated);
-
-        if ($product->stock < 5) {
-            Mail::to('admin@example.com')->send(new LowStockNotification($product));
-        }
-
-        return redirect()->route('products.index')->with('success', 'Producto actualizado exitosamente');
     }
 
     public function destroy(Product $product)
     {
-        $product->delete();
-        return redirect()->route('products.index')->with('success', 'Producto eliminado exitosamente');
+        try {
+            if ($product->image) {
+                $old_path = storage_path('app/public/' . $product->image);
+                if (file_exists($old_path)) {
+                    unlink($old_path);
+                }
+            }
+            $product->delete();
+            return redirect()->route('shop.products.index')
+                ->with('success', 'Producto eliminado exitosamente.');
+        } catch (\Exception $e) {
+            Log::error('Error al eliminar producto: ' . $e->getMessage());
+            return back()->with('error', 'Error al eliminar el producto. Por favor, intente nuevamente.');
+        }
     }
 }

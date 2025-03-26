@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('categories.update', $category) }}" method="POST">
+                    <form action="{{ route('shop.categories.update', $category) }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -39,7 +39,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('categories.index') }}" class="btn btn-secondary">Cancelar</a>
+                            <a href="{{ route('shop.categories.index') }}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Actualizar</button>
                         </div>
                     </form>

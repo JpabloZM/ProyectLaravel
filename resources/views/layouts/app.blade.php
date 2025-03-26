@@ -22,9 +22,9 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <span class="navbar-brand">
+                <a class="navbar-brand" href="{{ url('/') }}">
                     Sistema de Productos
-                </span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -32,14 +32,56 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}" href="{{ route('products.index') }}">
-                                <i class="fas fa-box me-1"></i>Productos
+                            <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" 
+                               href="{{ url('/') }}">
+                                <i class="fas fa-home me-1"></i>{{ __('general.home') }}
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : '' }}" href="{{ route('categories.index') }}">
-                                <i class="fas fa-tags me-1"></i>Categorías
+                        
+                        <!-- Sección Tienda -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('shop.*') ? 'active' : '' }}" 
+                               href="#" id="tiendaDropdown" role="button" 
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-store me-1"></i>{{ __('general.shop') }}
                             </a>
+                            <ul class="dropdown-menu" aria-labelledby="tiendaDropdown">
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('shop.products.*') ? 'active' : '' }}" 
+                                       href="{{ route('shop.products.index') }}">
+                                        <i class="fas fa-box me-1"></i>{{ __('shop.products') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('shop.categories.*') ? 'active' : '' }}" 
+                                       href="{{ route('shop.categories.index') }}">
+                                        <i class="fas fa-tags me-1"></i>{{ __('shop.categories') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        <!-- Sección Blog -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('blog.*') ? 'active' : '' }}" 
+                               href="#" id="blogDropdown" role="button" 
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-blog me-1"></i>{{ __('general.blog') }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="blogDropdown">
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('blog.articles.*') ? 'active' : '' }}" 
+                                       href="{{ route('blog.articles.index') }}">
+                                        <i class="fas fa-newspaper me-1"></i>{{ __('blog.articles') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {{ request()->routeIs('blog.categories.*') ? 'active' : '' }}" 
+                                       href="{{ route('blog.categories.index') }}">
+                                        <i class="fas fa-folder me-1"></i>{{ __('blog.categories') }}
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
 
@@ -47,13 +89,13 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('general.login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('general.register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -66,7 +108,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('general.logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

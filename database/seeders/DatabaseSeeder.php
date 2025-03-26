@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\BlogCategory;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,14 +17,23 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Crear usuario predeterminado
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
         ]);
 
-        \App\Models\Category::create([
+        // Crear categoría predeterminada para productos
+        Category::create([
             'name' => 'General',
             'description' => 'Categoría general para productos'
+        ]);
+
+        // Crear categoría predeterminada para el blog
+        BlogCategory::create([
+            'name' => 'General',
+            'description' => 'Categoría general para el blog'
         ]);
     }
 }

@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class CategoryController extends Controller
+class BlogCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = Category::withCount('products')->orderBy('name')->paginate(10);
-        return view('categories.index', compact('categories'));
+        $categories = BlogCategory::withCount('articles')->orderBy('name')->paginate(10);
+        return view('blog.categories.index', compact('categories'));
     }
 
     /**
@@ -22,7 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create');
+        return view('blog.categories.create');
     }
 
     /**
@@ -32,13 +32,13 @@ class CategoryController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|max:255',
-                'description' => 'nullable'
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string'
             ]);
 
-            $category = Category::create($validated);
+            BlogCategory::create($validated);
 
-            return redirect()->route('shop.categories.index')
+            return redirect()->route('blog.categories.index')
                 ->with('success', 'Categoría creada exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al crear categoría: ' . $e->getMessage());
@@ -49,7 +49,7 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(string $id)
     {
         //
     }
@@ -57,25 +57,25 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(BlogCategory $category)
     {
-        return view('categories.edit', compact('category'));
+        return view('blog.categories.edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, BlogCategory $category)
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|max:255',
-                'description' => 'nullable'
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string'
             ]);
 
             $category->update($validated);
 
-            return redirect()->route('shop.categories.index')
+            return redirect()->route('blog.categories.index')
                 ->with('success', 'Categoría actualizada exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al actualizar categoría: ' . $e->getMessage());
@@ -86,15 +86,15 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(BlogCategory $category)
     {
         try {
-            if ($category->products()->exists()) {
-                return back()->withErrors(['error' => 'No se puede eliminar una categoría que tiene productos asociados']);
+            if ($category->articles()->exists()) {
+                return back()->with('error', 'No se puede eliminar una categoría que tiene artículos.');
             }
             
             $category->delete();
-            return redirect()->route('shop.categories.index')
+            return redirect()->route('blog.categories.index')
                 ->with('success', 'Categoría eliminada exitosamente.');
         } catch (\Exception $e) {
             Log::error('Error al eliminar categoría: ' . $e->getMessage());

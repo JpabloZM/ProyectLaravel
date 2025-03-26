@@ -18,4 +18,14 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function getProductCountAttribute()
+    {
+        return $this->products()->count();
+    }
+
+    public function canBeDeleted()
+    {
+        return !$this->products()->exists();
+    }
 }
