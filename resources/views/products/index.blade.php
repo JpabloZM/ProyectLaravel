@@ -7,9 +7,11 @@
             <h2><i class="fas fa-box me-2"></i>{{ __('shop.product_list') }}</h2>
         </div>
         <div class="col-md-4 text-end">
+            @auth
             <a href="{{ route('shop.products.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus-circle me-1"></i>{{ __('shop.create_product') }}
             </a>
+            @endauth
         </div>
     </div>
 
@@ -78,6 +80,7 @@
                             <a href="{{ route('shop.products.show', $product) }}" class="btn btn-outline-primary">
                                 <i class="fas fa-eye"></i>
                             </a>
+                            @auth
                             <a href="{{ route('shop.products.edit', $product) }}" class="btn btn-outline-warning">
                                 <i class="fas fa-edit"></i>
                             </a>
@@ -89,6 +92,7 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
+                            @endauth
                         </div>
                     </div>
                 </div>

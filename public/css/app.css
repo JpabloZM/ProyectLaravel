@@ -1,0 +1,133 @@
+/* Estilos generales */
+:root {
+    --primary-color: #3490dc;
+    --secondary-color: #6c757d;
+    --success-color: #38c172;
+    --danger-color: #e3342f;
+    --warning-color: #f6993f;
+    --info-color: #6cb2eb;
+}
+
+body {
+    font-family: "Nunito", sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Estilos para tarjetas */
+.card {
+    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+/* Estilos para botones */
+.btn {
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Estilos para alertas */
+.alert {
+    border-radius: 0.5rem;
+    font-weight: 500;
+}
+
+/* Estilos de navegación */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.nav-link {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+}
+
+.nav-link.active {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+}
+
+.dropdown-item.active {
+    background-color: var(--primary-color);
+}
+
+/* Estilos para forms */
+.form-control {
+    border-radius: 0.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+}
+
+.input-group-text {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+/* Estilos para tablas */
+.table {
+    background-color: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.table thead th {
+    background-color: #f8fafc;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
+/* Estilos para badges */
+.badge {
+    font-weight: 600;
+    padding: 0.4em 0.6em;
+    border-radius: 0.25rem;
+}
+
+/* Welcome cards */
+.welcome-card {
+    position: relative;
+    border: none;
+    overflow: hidden;
+    border-radius: 0.75rem;
+}
+
+.welcome-card:before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(52, 144, 220, 0.1);
+    z-index: 0;
+}
+
+.welcome-card .card-body {
+    position: relative;
+    z-index: 1;
+}

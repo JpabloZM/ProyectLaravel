@@ -7,9 +7,11 @@
             <h2>Categorías</h2>
         </div>
         <div class="col-md-4 text-end">
+            @auth
             <a href="{{ route('shop.categories.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-1"></i>Nueva Categoría
             </a>
+            @endauth
         </div>
     </div>
 
@@ -56,6 +58,7 @@
                         </div>
                         <div class="card-footer bg-transparent">
                             <div class="d-flex justify-content-between">
+                                @auth
                                 <a href="{{ route('shop.categories.edit', $category) }}" 
                                    class="btn btn-warning btn-sm">
                                     <i class="fas fa-edit"></i> Editar
@@ -71,6 +74,12 @@
                                         <i class="fas fa-trash"></i> Eliminar
                                     </button>
                                 </form>
+                                @else
+                                <a href="{{ route('shop.categories.show', $category) }}" 
+                                   class="btn btn-primary btn-sm w-100">
+                                    <i class="fas fa-eye"></i> Ver detalles
+                                </a>
+                                @endauth
                             </div>
                         </div>
                     </div>

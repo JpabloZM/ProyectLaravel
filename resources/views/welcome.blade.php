@@ -4,6 +4,20 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
+            @auth
+                <div class="alert alert-success mb-4">
+                    <h4><i class="fas fa-user-check me-2"></i>{{ __('¡Bienvenido, ') }} {{ Auth::user()->name }}!</h4>
+                    <p class="mb-0">{{ __('Tienes acceso completo a todas las funcionalidades del sistema.') }}</p>
+                </div>
+            @else
+                <div class="alert alert-info mb-4">
+                    <h4><i class="fas fa-info-circle me-2"></i>{{ __('Acceso limitado') }}</h4>
+                    <p class="mb-0">{{ __('Actualmente puedes ver los productos y categorías, pero necesitas') }} 
+                    <a href="{{ route('login') }}" class="alert-link">{{ __('iniciar sesión') }}</a> 
+                    {{ __('para crear, editar o eliminar elementos.') }}</p>
+                </div>
+            @endauth
+            
             <div class="card shadow-lg border-0">
                 <div class="card-body p-5">
                     <h1 class="display-4 text-center mb-4">{{ __('general.welcome') }}</h1>
@@ -73,6 +87,7 @@
                                             <li class="list-group-item bg-light">{{ __('Validación de formularios mediante Form Requests') }}</li>
                                             <li class="list-group-item bg-light">{{ __('Implementación de Route Model Binding en todas las rutas donde se trabaje con modelos') }}</li>
                                             <li class="list-group-item bg-light">{{ __('Diseño responsive utilizando Bootstrap') }}</li>
+                                            <li class="list-group-item bg-light">{{ __('Sistema de autenticación con roles y permisos') }}</li>
                                         </ul>
                                     </div>
                                     

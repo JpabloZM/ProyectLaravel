@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <a href="{{ route('shop.products.edit', $product) }}" class="btn btn-warning">
+                        <a href="{{ route('shop.products.edit', $product ) }}" class="btn btn-warning">
                             <i class="fas fa-edit me-1"></i>Editar
                         </a>
                     </div>
